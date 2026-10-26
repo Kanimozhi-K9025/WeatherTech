@@ -2,200 +2,272 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Panchayat Weather Downscaling — SIH 2026 Concept Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Block → Panchayat Weather Downscaling — Tamil Nadu — SIH26074 Concept Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#f4f7fb; --card:#fff; --ink:#152033; --muted:#667085;
-  --line:#dfe5ee; --accent:#1769aa; --accent2:#0f766e;
-  --shadow:0 12px 32px rgba(16,24,40,.08);
-}
-*{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
-header{background:#0e2238;color:white;padding:20px 28px;display:flex;justify-content:space-between;align-items:center;gap:20px}
-h1{font-size:22px;margin:0 0 4px}.subtitle{font-size:13px;color:#cbd8e7}
-.badge{background:#fff2cc;color:#694b00;border:1px solid #efd88b;padding:7px 11px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}
-.wrap{max-width:1400px;margin:22px auto;padding:0 20px}
-.method{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:14px;padding:14px 18px;margin-bottom:16px}
-.method strong{color:#0e4d7b}.method span{color:var(--muted);font-size:13px}
-.controls{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
-.toggle{display:flex;background:#e8edf4;padding:4px;border-radius:10px}
-.toggle button{border:0;background:transparent;padding:9px 16px;border-radius:7px;font-weight:700;color:#536174;cursor:pointer}
-.toggle button.active{background:white;color:#0e4d7b;box-shadow:0 2px 7px rgba(0,0,0,.08)}
-.legend{font-size:12px;color:var(--muted);display:flex;gap:14px;align-items:center}
-.dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:5px}
-.layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(340px,.85fr);gap:16px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
-.mapcard{padding:14px}.maptitle{display:flex;justify-content:space-between;align-items:center;margin:0 0 8px}
-.maptitle h2{font-size:16px;margin:0}.mapnote{font-size:12px;color:var(--muted)}
-svg{width:100%;height:auto;display:block;background:#edf4ea;border-radius:10px;border:1px solid #d8e3d5}
-.panch{stroke:#fff;stroke-width:2;cursor:pointer;transition:.15s;vector-effect:non-scaling-stroke}
-.panch:hover{stroke:#111827;stroke-width:3}.panch.selected{stroke:#111827;stroke-width:4}
-.pname{font-size:11px;font-weight:800;pointer-events:none;text-anchor:middle;fill:#243142}
-.coarse .panch{fill:#c7d0db!important}
-.coarse .pname{fill:#485568}
-.side{padding:18px}.side h2{font-size:18px;margin:0 0 4px}.side .small{font-size:12px;color:var(--muted);margin-bottom:16px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
-.metric{border:1px solid var(--line);border-radius:10px;padding:11px}.metric label{font-size:11px;color:var(--muted);display:block;margin-bottom:4px}.metric b{font-size:19px}
-.band{background:#f4f8fc;border:1px solid #dce8f2;border-radius:10px;padding:12px;margin-bottom:12px}
-.bandtop{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}.bandval{font-size:16px;font-weight:800;margin-top:4px}
-.bar{height:9px;background:#dbe4ee;border-radius:99px;overflow:hidden;margin-top:9px}.bar>i{display:block;height:100%;border-radius:99px;background:#4b8cc8}
-.flag{display:inline-flex;align-items:center;gap:6px;background:#e8f5ee;color:#17603c;border:1px solid #bfe1cd;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:800;margin-bottom:13px}
-.advisory{border-left:4px solid #1769aa;background:#f3f7fb;padding:12px 13px;border-radius:8px;font-size:13px;line-height:1.45}
-.footer{font-size:11px;color:#7a8696;margin-top:14px;line-height:1.45}
-@media(max-width:900px){.layout{grid-template-columns:1fr}header{align-items:flex-start;flex-direction:column}}
+:root{--bg:#eef3f8;--card:#fff;--ink:#0f1c2e;--muted:#5f6f86;--line:#e1e8f0;--accent:#0f6cbd;--accent2:#0ea5a4;--soft:#f5f8fc;--shadow:0 1px 2px rgba(15,28,46,.05),0 12px 32px rgba(15,28,46,.07);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a121d;--card:#131f30;--ink:#e8eef7;--muted:#95a5bb;--line:#243449;--soft:#182739;--shadow:0 12px 32px rgba(0,0,0,.35)}}
+:root[data-theme="dark"]{--bg:#0a121d;--card:#131f30;--ink:#e8eef7;--muted:#95a5bb;--line:#243449;--soft:#182739;--shadow:0 12px 32px rgba(0,0,0,.35)}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+header{background:radial-gradient(900px 300px at 85% -40%,#1b8fd6 0,transparent 60%),linear-gradient(120deg,#08192d,#0c3157 60%,#0b4a6b);color:#fff;padding:26px 24px 64px}
+.hin{max-width:1300px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.eyebrow{font-size:11px;letter-spacing:.14em;font-weight:700;color:#7fd3d2;text-transform:uppercase;margin-bottom:8px}
+h1{font-size:30px;line-height:1.15;margin:0 0 8px;font-weight:800;letter-spacing:-.02em}.sub{font-size:14px;color:#c4d5e8;max-width:680px;line-height:1.5}
+.badges{display:flex;gap:8px;flex-wrap:wrap}
+.badge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;padding:7px 12px;border-radius:999px;font-size:12px;font-weight:600;backdrop-filter:blur(6px)}
+.badge.w{background:#fff2cc;color:#694b00;border-color:#efd88b;font-weight:800}
+.wrap{max-width:1300px;margin:-40px auto 24px;padding:0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:0;padding:6px;margin-bottom:14px}
+.st{display:flex;gap:11px;align-items:flex-start;padding:12px 14px;position:relative;font-size:12px;color:var(--muted);line-height:1.4}
+.st+.st:before{content:"›";position:absolute;left:-6px;top:50%;transform:translateY(-50%);font-size:22px;color:var(--line);font-weight:700}
+.st i{flex:none;width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-style:normal;font-weight:800;font-size:13px;display:grid;place-items:center}
+.st b{display:block;color:var(--ink);font-size:13px;margin-bottom:2px}
+.crumb{font-size:13px;margin-bottom:10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;color:var(--muted)}
+.crumb button{border:1px solid var(--line);background:var(--card);color:var(--accent);font:inherit;font-weight:700;padding:6px 12px;border-radius:99px;cursor:pointer}
+.crumb button:hover{background:var(--soft)}.crumb b{padding:6px 12px;background:var(--accent);color:#fff;border-radius:99px}
+.controls{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;padding:10px 12px}
+.cl{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.toggle{display:flex;background:var(--soft);border:1px solid var(--line);padding:4px;border-radius:12px}
+.toggle button{border:0;background:transparent;padding:9px 15px;border-radius:9px;font:inherit;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer}
+.toggle button.active{background:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(15,108,189,.3)}
+select{padding:10px 12px;border-radius:11px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:13px;font-weight:600;max-width:100%}
+select:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.legend{font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.grad{width:120px;height:10px;border-radius:9px;background:linear-gradient(90deg,#d6e9f5,#2f7fc0)}
+.layout{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(320px,.9fr);gap:16px;align-items:start}
+.mapcard{padding:18px}.mt{display:flex;justify-content:space-between;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:baseline}
+.mt h2{font-size:17px;margin:0;font-weight:800;letter-spacing:-.01em}.mt span{font-size:12px;color:var(--muted)}
+svg{width:100%;max-width:620px;margin:0 auto;height:auto;max-height:80vh;display:block;border-radius:14px;border:1px solid var(--line);background:#eaf0e2}
+.blk{stroke:#fff;stroke-width:1.2;cursor:pointer;vector-effect:non-scaling-stroke;transition:fill-opacity .15s}
+.blk:hover{stroke:#0f1c2e;stroke-width:2.5;fill-opacity:1}.blk.sel{stroke:#0f1c2e;stroke-width:3.5}
+.nm{font-weight:800;text-anchor:middle;pointer-events:none;fill:#14243a;stroke:rgba(255,255,255,.75);stroke-width:2.5px;paint-order:stroke}
+.side{padding:22px;position:sticky;top:12px}.side h2{font-size:21px;margin:0 0 4px;font-weight:800;letter-spacing:-.01em}.small{font-size:12.5px;color:var(--muted);margin-bottom:14px;line-height:1.45}
+.flags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.flag{display:inline-block;border-radius:999px;padding:6px 11px;font-size:11px;font-weight:700;border:1px solid}
+.f0{background:var(--soft);color:var(--muted);border-color:var(--line)}
+.High{background:#e6f6ee;color:#137a47;border-color:#b9e3cc}.Medium{background:#fff4d6;color:#7a5600;border-color:#efd88b}.Low{background:#fde9e9;color:#a02525;border-color:#f3bcbc}.NA{background:var(--soft);color:var(--muted);border-color:var(--line)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.m{border:1px solid var(--line);border-radius:12px;padding:11px 12px;background:var(--soft)}.m label{font-size:10.5px;color:var(--muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}.m b{font-size:19px;font-weight:800}
+.m:nth-child(3){background:linear-gradient(135deg,var(--accent),#0a4f8f);border:0}.m:nth-child(3) label{color:#cfe4f8}.m:nth-child(3) b{color:#fff}
+.band{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:13px;margin-bottom:14px}
+.bt{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);font-weight:600}.bv{font-size:17px;font-weight:800;margin-top:4px}
+.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:9px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:99px;transition:width .3s}
+.adv{border-left:4px solid var(--accent2);background:var(--soft);padding:13px 14px;border-radius:10px;font-size:13px;line-height:1.5}
+.adv:before{content:"AGRO-ADVISORY";display:block;font-size:10px;letter-spacing:.12em;font-weight:800;color:var(--accent2);margin-bottom:5px}
+.foot{font-size:11px;color:var(--muted);margin-top:14px;line-height:1.5}
+.pf{text-align:center;font-size:12px;color:var(--muted);margin:22px 0 4px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.side{position:static}.flow{grid-template-columns:1fr 1fr}.st+.st:before{display:none}h1{font-size:24px}}
+@media(max-width:520px){.flow{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <header>
-  <div><h1>Panchayat-Level Weather Downscaling</h1><div class="subtitle">SIH 2026 • Coarse forecast → local weather information → agro-meteorological advisory</div></div>
-  <div class="badge">CONCEPT DEMO • SYNTHETIC DATA</div>
+  <div class="hin">
+    <div><div class="eyebrow">Smart India Hackathon 2026 • SIH26074 • Team WeatherTech</div>
+    <h1>Block → Panchayat Weather Downscaling</h1>
+    <div class="sub">One coarse block-level forecast becomes hyper-local, terrain-aware weather and agro-advisories for every village panchayat in Tamil Nadu.</div></div>
+    <div class="badges"><span class="badge">Agriculture &amp; Rural Development</span><span class="badge w">CONCEPT DEMO • SYNTHETIC DATA</span></div>
+  </div>
 </header>
-
 <div class="wrap">
-  <div class="method">
-    <strong>Method:</strong>
-    <span>Coarse district forecast + local elevation/slope → terrain-aware adjustment → Panchayat-level estimate. Temperature uses an elevation lapse-rate concept; rainfall uses a terrain/slope-driven adjustment. No real ML validation is claimed.</span>
+  <div class="card flow">
+    <div class="st"><i>1</i><div><b>Block forecast</b>Coarse GFS-based input for a block</div></div>
+    <div class="st"><i>2</i><div><b>Terrain features</b>Elevation, slope, coast &amp; Ghats exposure</div></div>
+    <div class="st"><i>3</i><div><b>Downscaling</b>Lapse-rate &amp; orographic adjustment, mean-preserved</div></div>
+    <div class="st"><i>4</i><div><b>Panchayat output</b>Rain, temperature, P10–P90, confidence, advisory</div></div>
   </div>
-
-  <div class="controls">
-    <div class="toggle">
-      <button id="coarseBtn">Coarse Forecast</button>
-      <button id="downBtn" class="active">Downscaled View</button>
+  <div class="crumb" id="bc"></div>
+  <div class="card controls">
+    <div class="cl">
+      <div class="toggle"><button id="cb">Block Forecast (coarse)</button><button id="db" class="active">Downscaled View</button></div>
+      <select id="sel" aria-label="Select district"></select>
+      <select id="sb" aria-label="Select block"></select>
     </div>
-    <div class="legend">
-      <span><i class="dot" style="background:#b8d9ef"></i>lower rainfall</span>
-      <span><i class="dot" style="background:#4c8cc5"></i>higher rainfall</span>
-      <span>Click any Panchayat</span>
-    </div>
+    <div class="legend">lower rain <span class="grad"></span> higher rain • <span id="rg"></span></div>
   </div>
-
   <div class="layout">
     <div class="card mapcard">
-      <div class="maptitle">
-        <h2 id="mapTitle">Downscaled Panchayat rainfall probability</h2>
-        <div class="mapnote">Illustrative district • 12 Panchayats</div>
-      </div>
-      <svg id="map" viewBox="0 0 900 610" aria-label="Interactive Panchayat map"></svg>
+      <div class="mt"><h2 id="mt"></h2><span id="ms"></span></div>
+      <svg id="map" viewBox="0 0 650 810" role="img" aria-label="Schematic map of Tamil Nadu"></svg>
     </div>
-
     <div class="card side">
-      <h2 id="selectedName">Panchayat 01</h2>
-      <div class="small">Click a polygon to inspect the local forecast.</div>
-      <div class="flag">● Moderate observational support — concept only</div>
-
+      <h2 id="sn"></h2><div class="small" id="ss"></div>
+      <div class="flags"><span class="flag f0">● Concept only — not verified</span><span class="flag NA" id="cf"></span></div>
       <div class="grid">
-        <div class="metric"><label>Maximum temperature</label><b id="tmax">31.8 °C</b></div>
-        <div class="metric"><label>Minimum temperature</label><b id="tmin">23.4 °C</b></div>
-        <div class="metric"><label>Rain probability</label><b id="prob">68%</b></div>
-        <div class="metric"><label>Rainfall P50</label><b id="p50">24 mm</b></div>
+        <div class="m"><label>Max temperature</label><b id="tx"></b></div>
+        <div class="m"><label>Min temperature</label><b id="tn"></b></div>
+        <div class="m"><label>Rain probability</label><b id="pr"></b></div>
+        <div class="m"><label>Rainfall P50</label><b id="p5"></b></div>
+        <div class="m"><label>Elevation</label><b id="el"></b></div>
+        <div class="m"><label>Distance to coast</label><b id="ds"></b></div>
+        <div class="m"><label>Terrain slope</label><b id="sl"></b></div>
+        <div class="m"><label>Nearest AWS / gauge</label><b id="aw"></b></div>
       </div>
-
-      <div class="band">
-        <div class="bandtop"><span>Rainfall uncertainty band</span><span>P10–P90</span></div>
-        <div class="bandval" id="band">7–52 mm/day</div>
-        <div class="bar"><i id="bar" style="width:68%"></i></div>
-      </div>
-
-      <div class="advisory" id="advisory">
-        Rain likely. Where feasible, plan field operations with a rain buffer and monitor drainage in low-lying plots.
-      </div>
-
-      <div class="footer">
-        <b>Prototype honesty note:</b> Values are generated for demonstration. Production version will replace them with verified GFS forecasts, AWS/rain-gauge observations, actual Panchayat GIS boundaries and DEM/land-cover data.
-      </div>
+      <div class="band"><div class="bt"><span>Rainfall uncertainty band</span><span>P10–P90</span></div><div class="bv" id="bd"></div><div class="bar"><i id="br"></i></div></div>
+      <div class="adv" id="ad"></div>
+      <div class="foot"><b>Honesty note:</b> Boundaries at every level are generated (Voronoi sub-division of a simplified state outline), not official. To keep the demo light, each district is split into a representative set of real block names, not all 385 blocks, and panchayats carry synthetic IDs (GP-01…) instead of real names. Production will use verified GFS forecasts, IMD / TNAU AWS and rain-gauge data, official Panchayat GIS boundaries (over 12,000 village panchayats) and DEM / land-cover data.</div>
     </div>
   </div>
+<div class="pf">Illustrative prototype — no ML validation claimed. Production model: LightGBM + quantile regression on verified GFS, IMD / TNAU AWS and DEM data.</div>
 </div>
-
 <script>
-const data = [
- {id:1,rain:18,prob:54,tmax:32.6,tmin:24.0,p10:4,p90:38,ad:"Rain possible. Keep a small weather buffer for field operations."},
- {id:2,rain:27,prob:67,tmax:31.9,tmin:23.6,p10:7,p90:51,ad:"Rain likely. Plan field operations with a rain buffer and monitor drainage."},
- {id:3,rain:34,prob:76,tmax:31.2,tmin:23.1,p10:9,p90:62,ad:"Higher rain risk. Review drainage and avoid time-sensitive field operations where feasible."},
- {id:4,rain:22,prob:61,tmax:32.1,tmin:23.8,p10:6,p90:44,ad:"Rain possible. Maintain a rain buffer around spraying or harvesting activities."},
- {id:5,rain:41,prob:82,tmax:30.7,tmin:22.8,p10:12,p90:70,ad:"High rain signal. Check drainage and postpone weather-sensitive operations where feasible."},
- {id:6,rain:29,prob:71,tmax:31.5,tmin:23.0,p10:8,p90:56,ad:"Rain likely. Monitor field access and drainage before planned operations."},
- {id:7,rain:16,prob:48,tmax:33.1,tmin:24.4,p10:3,p90:34,ad:"Lower rain signal. Continue routine monitoring and retain normal field plans."},
- {id:8,rain:25,prob:64,tmax:32.0,tmin:23.7,p10:6,p90:48,ad:"Rain possible. Keep a small operational buffer and monitor local conditions."},
- {id:9,rain:38,prob:79,tmax:31.0,tmin:22.9,p10:10,p90:66,ad:"Higher rain risk. Review drainage and protect recently applied inputs where feasible."},
- {id:10,rain:20,prob:57,tmax:32.4,tmin:24.1,p10:4,p90:41,ad:"Rain possible. Consider timing weather-sensitive field activities carefully."},
- {id:11,rain:31,prob:73,tmax:31.4,tmin:23.3,p10:8,p90:58,ad:"Rain likely. Monitor drainage and provide a rain buffer for field operations."},
- {id:12,rain:14,prob:43,tmax:33.4,tmin:24.7,p10:2,p90:31,ad:"Lower rain signal. Routine monitoring is appropriate in this concept scenario."}
-];
-
-const colors = ["#cfe7f5","#bddcef","#a9d1ea","#94c5e4","#7fb8de","#69a9d5","#d8e9f3","#a6cee3","#75b4db","#c0deed","#8bbede","#d1e5f0"];
-const svg = document.getElementById("map");
-let mode="down", selected=1;
-
-function polygonPoints(cx,cy,w,h,skew=0){
-  return `${cx-w/2},${cy-h/2} ${cx+w/2},${cy-h/2+skew} ${cx+w/2-8},${cy+h/2} ${cx-w/2+8},${cy+h/2-skew}`;
-}
-function draw(){
-  svg.innerHTML="";
-  // Background terrain hints
-  const bg=document.createElementNS("http://www.w3.org/2000/svg","path");
-  bg.setAttribute("d","M0 110 C160 40 280 170 430 85 S720 60 900 130 L900 0 L0 0Z");
-  bg.setAttribute("fill","#dfead9"); svg.appendChild(bg);
-
-  const title=document.createElementNS("http://www.w3.org/2000/svg","text");
-  title.setAttribute("x",450); title.setAttribute("y",45); title.setAttribute("text-anchor","middle");
-  title.setAttribute("font-size","18"); title.setAttribute("font-weight","800"); title.setAttribute("fill","#344054");
-  title.textContent="Illustrative Pilot District"; svg.appendChild(title);
-
-  const startX=185,startY=135,w=175,h=120,gx=185,gy=125;
-  data.forEach((d,i)=>{
-    const col=i%4,row=Math.floor(i/4),cx=startX+col*gx,cy=startY+row*gy;
-    const p=document.createElementNS("http://www.w3.org/2000/svg","polygon");
-    p.classList.add("panch"); if(d.id===selected)p.classList.add("selected");
-    p.dataset.id=d.id;
-    p.setAttribute("points",polygonPoints(cx,cy,w,h,(col%2?5:-4)));
-    p.setAttribute("fill", mode==="coarse" ? "#c7d0db" : colors[i]);
-    p.addEventListener("click",()=>select(d.id));
-    svg.appendChild(p);
-
-    const tx=document.createElementNS("http://www.w3.org/2000/svg","text");
-    tx.classList.add("pname"); tx.setAttribute("x",cx); tx.setAttribute("y",cy+4);
-    tx.textContent=`Panchayat ${String(d.id).padStart(2,"0")}`; svg.appendChild(tx);
-  });
-
-  const note=document.createElementNS("http://www.w3.org/2000/svg","text");
-  note.setAttribute("x",450);note.setAttribute("y",555);note.setAttribute("text-anchor","middle");
-  note.setAttribute("font-size","12");note.setAttribute("fill","#667085");
-  note.textContent=mode==="coarse" ? "Coarse mode: one district-wide forecast value is shown everywhere." : "Downscaled mode: local variation is introduced using terrain/context.";
-  svg.appendChild(note);
-}
-function select(id){
-  selected=id; const d=data[id-1];
-  document.getElementById("selectedName").textContent=`Panchayat ${String(id).padStart(2,"0")}`;
-  document.getElementById("tmax").textContent=`${d.tmax.toFixed(1)} °C`;
-  document.getElementById("tmin").textContent=`${d.tmin.toFixed(1)} °C`;
-  document.getElementById("prob").textContent=`${d.prob}%`;
-  document.getElementById("p50").textContent=`${d.rain} mm`;
-  document.getElementById("band").textContent=`${d.p10}–${d.p90} mm/day`;
-  document.getElementById("bar").style.width=`${d.prob}%`;
-  document.getElementById("advisory").textContent=d.ad;
-  draw();
-}
-function setMode(m){
-  mode=m;
-  document.getElementById("coarseBtn").classList.toggle("active",m==="coarse");
-  document.getElementById("downBtn").classList.toggle("active",m==="down");
-  document.getElementById("mapTitle").textContent=m==="coarse" ? "Coarse district forecast" : "Downscaled Panchayat rainfall probability";
-  if(m==="coarse"){
-    // Coarse forecast: deliberately identical values across the district.
-    document.getElementById("tmax").textContent="32.0 °C";
-    document.getElementById("tmin").textContent="23.8 °C";
-    document.getElementById("prob").textContent="65%";
-    document.getElementById("p50").textContent="25 mm";
-    document.getElementById("band").textContent="8–50 mm/day";
-    document.getElementById("bar").style.width="65%";
-    document.getElementById("advisory").textContent="District-wide coarse forecast: the same weather signal is presented across all Panchayats.";
-  } else select(selected);
-  draw();
-}
-document.getElementById("coarseBtn").onclick=()=>setMode("coarse");
-document.getElementById("downBtn").onclick=()=>setMode("down");
-select(1);
+// name, lon, lat, elevation (m), distance to coast (km), Western Ghats exposure (0-2) — approximate, illustrative
+const D=[["Chennai",80.25,13.08,6,3,0],["Tiruvallur",79.95,13.2,40,30,0],["Kancheepuram",79.75,12.8,80,50,0],["Chengalpattu",80.0,12.6,30,15,0],
+["Ranipet",79.35,12.9,150,90,0],["Vellore",79.1,12.85,220,120,0],["Tirupattur",78.55,12.5,400,200,0],["Krishnagiri",78.1,12.5,600,260,0],
+["Dharmapuri",78.2,12.1,500,270,0],["Tiruvannamalai",79.05,12.3,170,110,0],["Villupuram",79.5,11.95,60,45,0],["Kallakurichi",78.95,11.75,100,120,0],
+["Cuddalore",79.6,11.5,15,12,0],["Salem",78.15,11.65,280,220,0],["Namakkal",78.2,11.25,200,220,0],["Erode",77.7,11.35,180,260,0],
+["Tiruppur",77.35,11.05,300,290,0],["Coimbatore",77.0,10.95,420,300,1],["Nilgiris",76.7,11.4,1800,330,2],["Karur",78.05,10.95,120,200,0],
+["Tiruchirappalli",78.7,10.8,90,140,0],["Perambalur",78.9,11.25,120,120,0],["Ariyalur",79.15,11.15,60,80,0],["Mayiladuthurai",79.65,11.1,8,15,0],
+["Nagapattinam",79.8,10.6,5,5,0],["Tiruvarur",79.5,10.75,10,25,0],["Thanjavur",79.13,10.78,40,90,0],["Pudukkottai",78.8,10.4,90,45,0],
+["Sivaganga",78.5,9.85,80,60,0],["Madurai",78.1,9.95,130,120,0],["Dindigul",77.95,10.35,300,170,1],["Theni",77.5,9.95,350,200,1],
+["Virudhunagar",77.9,9.55,110,90,0],["Ramanathapuram",78.9,9.4,10,8,0],["Thoothukudi",78.1,8.8,15,10,0],["Tirunelveli",77.7,8.7,80,60,1],
+["Tenkasi",77.4,8.95,200,90,2],["Kanniyakumari",77.4,8.3,50,10,2]];
+// representative block names per district (same order as D) — indicative, not the full official list
+const NM=`Ambattur,Sholinganallur,Alandur
+Poonamallee,Gummidipoondi,Tiruttani,Uthukottai,Pallipattu,Minjur
+Kancheepuram,Walajabad,Uthiramerur,Sriperumbudur,Kundrathur
+Chengalpattu,Thirukalukundram,Madurantakam,Tirupporur,Kattankolathur,St.Thomas Mount
+Arcot,Walajah,Nemili,Sholingur,Arakkonam,Kaveripakkam
+Katpadi,Gudiyatham,Anaicut,Pernambut,K.V.Kuppam,Kaniyambadi
+Tirupattur,Vaniyambadi,Ambur,Natrampalli
+Krishnagiri,Hosur,Shoolagiri,Denkanikottai,Uthangarai,Bargur,Pochampalli
+Dharmapuri,Harur,Pennagaram,Palacode,Karimangalam,Nallampalli
+Tiruvannamalai,Chengam,Polur,Arani,Cheyyar,Vandavasi,Thandarampattu,Kalasapakkam
+Villupuram,Vikravandi,Tindivanam,Gingee,Marakkanam,Mailam,Kandamangalam
+Kallakurichi,Sankarapuram,Chinnasalem,Ulundurpet,Tirukovilur,Rishivandiyam
+Cuddalore,Panruti,Kurinjipadi,Chidambaram,Kattumannarkoil,Virudhachalam,Bhuvanagiri
+Salem,Attur,Omalur,Mettur,Edappadi,Sankari,Yercaud,Valapady
+Namakkal,Rasipuram,Tiruchengode,Paramathi Velur,Kolli Hills,Sendamangalam
+Erode,Bhavani,Gobichettipalayam,Sathyamangalam,Perundurai,Anthiyur,Thalavadi
+Tiruppur,Avinashi,Palladam,Udumalpet,Dharapuram,Kangeyam
+Anaimalai,Pollachi North,Sulur,Annur,Madukkarai,Periyanaickenpalayam,Thondamuthur
+Udhagamandalam,Coonoor,Kotagiri,Gudalur
+Karur,Aravakurichi,Krishnarayapuram,Kulithalai,Thogamalai
+Manapparai,Musiri,Lalgudi,Thuraiyur,Manachanallur,Thottiyam,Andanallur
+Perambalur,Veppanthattai,Alathur,Veppur
+Ariyalur,Jayankondam,Sendurai,Andimadam,T.Palur
+Mayiladuthurai,Sirkazhi,Kollidam,Sembanarkoil
+Nagapattinam,Kilvelur,Thirumarugal,Vedaranyam,Keezhaiyur
+Tiruvarur,Mannargudi,Nannilam,Kodavasal,Thiruthuraipoondi,Valangaiman
+Thanjavur,Orathanadu,Papanasam,Thiruvaiyaru,Pattukkottai,Peravurani,Kumbakonam
+Pudukkottai,Aranthangi,Gandarvakottai,Illupur,Karambakudi,Viralimalai
+Sivaganga,Karaikudi,Devakottai,Manamadurai,Ilayangudi,Tiruppuvanam
+Melur,Usilampatti,Thirumangalam,Alanganallur,Vadipatti,Kallikudi,Sedapatti
+Dindigul,Palani,Oddanchatram,Vedasandur,Natham,Kodaikanal,Athoor
+Theni,Bodinayakanur,Uthamapalayam,Periyakulam,Cumbum,Andipatti
+Virudhunagar,Sivakasi,Rajapalayam,Aruppukkottai,Srivilliputhur,Sattur
+Ramanathapuram,Paramakudi,Mudukulathur,Rameswaram,Kadaladi,Tiruvadanai
+Thoothukudi,Kovilpatti,Srivaikuntam,Ottapidaram,Tiruchendur,Vilathikulam
+Palayamkottai,Nanguneri,Radhapuram,Ambasamudram,Cheranmahadevi,Manur
+Tenkasi,Shenkottai,Sankarankovil,Kadayanallur,Alangulam,Vasudevanallur
+Agastheeswaram,Thovalai,Killiyoor,Thuckalay,Rajakkamangalam,Melpuram`.split("\n").map(s=>s.split(","));
+const COAST=[[77.55,8.08],[77.95,8.2],[78.12,8.5],[78.15,8.85],[78.4,9.1],[78.9,9.28],[79.2,9.32],[79.35,9.28],[79.25,9.5],[79.05,9.75],[79.2,10.0],[79.4,10.28],[79.85,10.3],[79.85,10.8],[79.85,11.2],[79.78,11.7],[79.85,12.2],[80.15,12.7],[80.27,13.1],[80.3,13.55]];
+const BORD=[[80.3,13.55],[79.95,13.6],[79.45,13.4],[79.1,13.15],[78.7,13.0],[78.3,12.85],[77.95,12.85],[77.75,12.55],[77.9,12.25],[77.7,11.95],[77.85,11.7],[77.4,11.65],[77.0,11.75],[76.55,11.65],[76.35,11.3],[76.6,11.05],[76.8,10.85],[77.1,10.4],[77.25,10.2],[77.35,9.85],[77.3,9.55],[77.4,9.3],[77.3,8.95],[77.35,8.6],[77.45,8.35],[77.55,8.08]];
+const C={tx:33.0,tn:24.0,pr:60,p5:12,p10:4,p90:28};
+const X=o=>(o-76)*125+10,Y=a=>(13.9-a)*125+10,P=a=>a.map(q=>[X(q[0]),Y(q[1])]);
+const OUT=P(COAST.concat(BORD.slice(1,-1)));
+function clip(poly,a,b,c){const o=[];for(let k=0;k<poly.length;k++){const p=poly[k],q=poly[(k+1)%poly.length],fp=a*p[0]+b*p[1]-c,fq=a*q[0]+b*q[1]-c;
+ if(fp<=0)o.push(p);if(fp*fq<0){const t=fp/(fp-fq);o.push([p[0]+t*(q[0]-p[0]),p[1]+t*(q[1]-p[1])])}}return o}
+function cen(p){let a=0,x=0,y=0;for(let i=0;i<p.length;i++){const q=p[(i+1)%p.length],f=p[i][0]*q[1]-q[0]*p[i][1];a+=f;x+=(p[i][0]+q[0])*f;y+=(p[i][1]+q[1])*f}return a?[x/(3*a),y/(3*a)]:p[0]}
+function area(p){let a=0;for(let i=0;i<p.length;i++){const q=p[(i+1)%p.length];a+=p[i][0]*q[1]-q[0]*p[i][1]}return Math.abs(a)/2}
+function bbox(p){const x=p.map(q=>q[0]),y=p.map(q=>q[1]);return[Math.min(...x),Math.min(...y),Math.max(...x),Math.max(...y)]}
+function inside(p,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if((a[1]>p[1])!==(b[1]>p[1])&&p[0]<(b[0]-a[0])*(p[1]-a[1])/(b[1]-a[1])+a[0])c=!c}return c}
+function rng(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const vc=(poly,s)=>s.map((a,i)=>{let c=poly;s.forEach((t,j)=>{if(j!==i)c=clip(c,2*(t[0]-a[0]),2*(t[1]-a[1]),t[0]*t[0]+t[1]*t[1]-a[0]*a[0]-a[1]*a[1])});return c});
+// split a polygon into n roughly even cells (random seeds + 2 relaxation passes); returns [{c:cell,s:seed}]
+function split(poly,n,r){const bb=bbox(poly);let s=[],g=0;while(s.length<n&&g++<5000){const p=[bb[0]+r()*(bb[2]-bb[0]),bb[1]+r()*(bb[3]-bb[1])];if(inside(p,poly))s.push(p)}
+ let cs=vc(poly,s);for(let k=0;k<2;k++){s=cs.map((c,i)=>c.length>2?cen(c):s[i]);cs=vc(poly,s)}return cs.map((c,i)=>({c,s:s[i]})).filter(o=>o.c.length>2)}
+const CELLS=vc(OUT,D.map(d=>[X(d[1]),Y(d[2])]));
+// coarse-to-local physics (same as the district prototype)
+function calc(e,k,g){const c=Math.max(0,1-k/200),pr=Math.round(Math.min(92,Math.max(35,48+20*c+10*g))),p5=Math.round(6+10*c+6*g);
+ return{e:Math.round(e),k:Math.round(k),pr,p5,tx:35-.0065*e-1.2*c,tn:25-.0065*e+.8*c,p10:Math.round(p5*.3),p90:Math.round(p5*2.3)}}
+// block level (the coarse input in the problem statement)
+const BC={};
+function blocks(di){if(BC[di])return BC[di];const d=D[di],n=NM[di],r=rng(di*131+7),sp=split(CELLS[di],n.length,r);
+ return BC[di]=sp.map((o,i)=>{const e=d[3]*(.55+r()*.9),k=Math.max(2,d[4]*(.7+r()*.6));return{n:n[i],c:o.c,s:o.s,g:d[5],v:calc(e,k,d[5])}})}
+// panchayat level (downscaled output)
+const GC={};
+function gps(di,bi){const key=di+"_"+bi;if(GC[key])return GC[key];const b=blocks(di)[bi],B=b.v,r=rng(di*977+bi*13+3),
+ n=Math.max(10,Math.min(45,Math.round(area(b.c)/26))),sp=split(b.c,n,r),rel=25+.12*B.e;
+ const a=sp.map(o=>{const e=Math.max(0,B.e+(r()-.5)*2*rel),de=e-B.e;return{c:o.c,e,de,dp:de*.035*(b.g+.6)+(r()-.5)*4,dt:-.0065*de+(r()-.5)*.3,
+  aws:Math.round(3+Math.hypot(o.s[0]-b.s[0],o.s[1]-b.s[1])*.89+r()*4),k:Math.max(1,Math.round(B.k*(.85+r()*.3))),sl:+(1+Math.abs(de)/rel*6+r()*2).toFixed(1)}});
+ const m=f=>a.reduce((s,o)=>s+o[f],0)/a.length,mp=m("dp"),mt=m("dt");
+ return GC[key]=a.map((o,i)=>{const pr=Math.round(Math.min(95,Math.max(30,B.pr+o.dp-mp))),p5=Math.round(B.p5*pr/B.pr),sc=Math.abs(o.de)/rel+o.aws/25;
+  return{c:o.c,id:"GP-"+String(i+1).padStart(2,"0"),e:Math.round(o.e),k:o.k,sl:o.sl,aws:o.aws,pr,p5,p10:Math.round(p5*.3),p90:Math.round(p5*2.3),
+   tx:B.tx+o.dt-mt,tn:B.tn+o.dt-mt,conf:sc<1.2?"High":sc<2?"Medium":"Low"}})}
+function adv(r,name){let s=r.pr>=75?"High rain signal. Check field drainage and postpone weather-sensitive operations (spraying, top-dressing) where feasible."
+ :r.pr>=62?"Rain likely. Keep a rain buffer for field operations and monitor drainage in low-lying plots."
+ :r.pr>=50?"Rain possible. Keep a small weather buffer for field operations.":"Lower rain signal. Routine monitoring and normal field plans are appropriate.";
+ if(r.e>1000)s+=" Hill area: watch for slippery roads and landslide-prone slopes.";
+ if(r.k<=20)s+=" Coastal area: watch for waterlogging and strong-wind advisories.";
+ if(r.sl>=6)s+=" Steeper terrain: check runoff and soil erosion on sloping fields.";
+ if(["Thanjavur","Tiruvarur","Nagapattinam","Mayiladuthurai"].includes(name))s+=" Cauvery-delta paddy: keep drainage channels clear.";
+ if(r.conf==="Low")s+=" Low confidence: gauges are sparse nearby, so treat this as indicative and cross-check locally.";return s}
+const N="http://www.w3.org/2000/svg",svg=document.getElementById("map"),$=i=>document.getElementById(i);
+let mode="down",lvl=0,di=26,bi=0,gi=0;
+let lo=40,hi=90;
+const col=p=>{const t=Math.max(0,Math.min(1,(p-lo)/(hi-lo))),a=[214,233,245],b=[47,127,192];return`rgb(${a.map((v,i)=>Math.round(v+(b[i]-v)*t))})`};
+const el=(t,a,x)=>{const n=document.createElementNS(N,t);for(const k in a)n.setAttribute(k,a[k]);if(x)n.textContent=x;return n};
+const pts=p=>p.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" ");
+const lbl=(x,y,t,o={})=>svg.appendChild(el("text",Object.assign({x,y,"text-anchor":"middle","font-size":12,fill:"#7a8aa0","font-style":"italic"},o),t));
+function items(){
+ if(lvl===0)return D.map((d,i)=>({c:CELLS[i],name:d[0],v:calc(d[3],d[4],d[5]),sel:i===di,go:()=>openD(i)}));
+ if(lvl===1)return blocks(di).map((b,i)=>({c:b.c,name:b.n,v:b.v,sel:i===bi,go:()=>openB(i)}));
+ return gps(di,bi).map((g,i)=>({c:g.c,name:String(i+1).padStart(2,"0"),tip:g.id,v:g,sel:i===gi,go:()=>{gi=i;refresh()}}))}
+function draw(){svg.innerHTML="";const it=items(),pr=it.map(o=>o.v.pr);lo=Math.min(...pr);hi=Math.max(...pr);if(hi-lo<4){lo-=2;hi+=2}
+ if(lvl===0){lo=40;hi=90}
+ let vb=[0,0,650,810];
+ if(lvl>0){const bb=bbox(lvl===1?CELLS[di]:blocks(di)[bi].c),m=.06*Math.max(bb[2]-bb[0],bb[3]-bb[1]);vb=[bb[0]-m,bb[1]-m,bb[2]-bb[0]+2*m,bb[3]-bb[1]+2*m]}
+ svg.setAttribute("viewBox",vb.join(" "));
+ const fs=Math.max(vb[2],vb[3]*.8)/650*8*(lvl===2?1.3:1);
+ svg.appendChild(el("polygon",{points:pts(P(COAST.concat([[81.2,13.9],[81.2,7.4],[77.55,7.4]]))),fill:"#c9dff0"}));
+ if(lvl===0){svg.appendChild(el("polygon",{points:pts(P([[79.9,9.85],[80.4,9.8],[81.2,9.1],[81.2,7.4],[80.2,7.4],[79.8,8.5],[79.85,9.4]])),fill:"#e0e7d4",stroke:"#c3cfb5"}));
+ lbl(X(80.75),Y(12.2),"Bay of Bengal");lbl(X(78.9),Y(7.75),"Indian Ocean");lbl(X(78.75),Y(8.85),"Gulf of Mannar",{"font-size":10});
+ lbl(X(80.6),Y(8.6),"Sri Lanka",{"font-size":10});lbl(X(79.2),Y(13.85),"Andhra Pradesh");lbl(X(77.0),Y(13.2),"Karnataka");
+ lbl(X(76.35),Y(10.2),"Kerala",{transform:"rotate(-90 "+X(76.35)+" "+Y(10.2)+")"})}
+ it.forEach(o=>{const p=el("polygon",{points:pts(o.c),fill:mode==="coarse"&&lvl>0?"#c7d0db":col(o.v.pr),class:"blk"+(o.sel?" sel":""),"fill-opacity":.85});
+  p.addEventListener("click",o.go);p.appendChild(el("title",{},o.tip||o.name));svg.appendChild(p)});
+ it.forEach(o=>{const c=cen(o.c);svg.appendChild(el("text",{x:c[0],y:c[1]+fs*.4,class:"nm","font-size":fs},o.name))});
+ if(lvl===0){svg.appendChild(el("text",{x:610,y:28,"text-anchor":"middle","font-size":15,"font-weight":800,fill:"#5a6678"},"N ↑"))}
+ $("rg").textContent=mode==="coarse"&&lvl>0?"coarse view: one value for every "+(lvl===1?"block":"panchayat"):"colour range "+Math.round(lo)+"–"+Math.round(hi)+"% (fitted to this view)"}
+function show(v){$("sn").textContent=v.name;$("ss").textContent=v.note;
+ $("tx").textContent=v.tx.toFixed(1)+" °C";$("tn").textContent=v.tn.toFixed(1)+" °C";$("pr").textContent=v.pr+"%";$("p5").textContent=v.p5+" mm";
+ $("el").textContent=v.e==null?"—":v.e.toLocaleString()+" m";$("ds").textContent=v.k==null?"—":"~"+v.k+" km";
+ $("sl").textContent=v.sl==null?"—":v.sl+"°";$("aw").textContent=v.aws==null?"—":"~"+v.aws+" km";
+ $("bd").textContent=v.p10+"–"+v.p90+" mm/day";$("br").style.width=v.pr+"%";$("ad").textContent=v.ad;
+ $("cf").className="flag "+(v.conf||"NA");$("cf").textContent=v.conf?"Confidence: "+v.conf:"Confidence: shown per panchayat"}
+function refresh(){const d=D[di],co=mode==="coarse";let v;
+ if(lvl===0){v=co?Object.assign({},C,{name:"Tamil Nadu (coarse)",note:"One state-wide value for every district.",ad:"State-wide coarse forecast: the same weather signal for every district. Click a district to open its blocks."})
+  :Object.assign(calc(d[3],d[4],d[5]),{name:d[0]+" district",note:"District aggregate. Click a district on the map to open its blocks.",ad:adv(calc(d[3],d[4],d[5]),d[0])})}
+ else if(lvl===1){const r=calc(d[3],d[4],d[5]),n=blocks(di).length;v=Object.assign(r,{name:d[0]+" district",note:co?"Coarse: one value applied to all "+n+" blocks.":n+" blocks shown with their own block-level forecast. Click a block to downscale it to panchayats.",ad:adv(r,d[0])})}
+ else{const b=blocks(di)[bi],g=gps(di,bi)[gi],n=gps(di,bi).length;
+  v=co?Object.assign({},b.v,{name:b.n+" block",note:"Block-level forecast (the coarse input) — one value for all "+n+" panchayats.",ad:adv(b.v,d[0])})
+   :Object.assign({},g,{name:b.n+" block · "+g.id,note:"Panchayat estimate (block forecast: "+b.v.pr+"% rain probability, "+b.v.p5+" mm P50).",ad:adv(g,d[0])})}
+ show(v);
+ $("mt").textContent=lvl===0?(co?"Coarse state-wide forecast":"Rain probability by district"):lvl===1?(co?"Coarse view — "+d[0]:"Block-level forecast — "+d[0]+" district"):(co?"Block forecast — "+blocks(di)[bi].n+" block":"Downscaled rain probability by panchayat — "+blocks(di)[bi].n+" block");
+ $("ms").textContent=lvl===0?"Tamil Nadu • click a district":lvl===1?"Click a block to see its panchayats":gps(di,bi).length+" panchayats (synthetic) • click one";
+ crumbs();draw()}
+function crumbs(){const c=$("bc");c.innerHTML="";const b=(t,f)=>{const x=document.createElement("button");x.textContent=t;x.onclick=f;c.appendChild(x)},s=t=>{const x=document.createElement("span");x.textContent=t;c.appendChild(x)};
+ if(lvl===0){const x=document.createElement("b");x.textContent="Tamil Nadu (38 districts)";c.appendChild(x);return}
+ b("Tamil Nadu",()=>{lvl=0;sync();refresh()});s("›");
+ if(lvl===1){const x=document.createElement("b");x.textContent=D[di][0];c.appendChild(x);return}
+ b(D[di][0],()=>{lvl=1;sync();refresh()});s("›");const x=document.createElement("b");x.textContent=blocks(di)[bi].n+" block";c.appendChild(x)}
+function fillB(){const s=$("sb");s.innerHTML="";const o=document.createElement("option");o.value=-1;o.textContent="Select block…";s.appendChild(o);
+ blocks(di).forEach((b,i)=>{const o=document.createElement("option");o.value=i;o.textContent=b.n;s.appendChild(o)})}
+function sync(){$("sel").value=di;fillB();$("sb").value=lvl===2?bi:-1}
+function openD(i){di=i;bi=0;gi=0;lvl=1;sync();refresh()}
+function openB(i){bi=i;gi=0;lvl=2;sync();refresh()}
+function setMode(m){mode=m;$("cb").classList.toggle("active",m==="coarse");$("db").classList.toggle("active",m==="down");refresh()}
+D.map((d,i)=>[d[0],i]).sort((a,b)=>a[0].localeCompare(b[0])).forEach(o=>{const n=document.createElement("option");n.value=o[1];n.textContent=o[0]+" district";$("sel").appendChild(n)});
+$("sel").onchange=e=>openD(+e.target.value);
+$("sb").onchange=e=>{const v=+e.target.value;if(v>=0)openB(v);else{lvl=1;refresh()}};
+$("cb").onclick=()=>setMode("coarse");$("db").onclick=()=>setMode("down");
+sync();refresh();
 </script>
 </body>
 </html>
