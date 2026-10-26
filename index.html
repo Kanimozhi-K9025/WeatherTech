@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panchayat Weather Downscaling — SIH 2026 Concept Demo</title>
+<style>
+:root{
+  --bg:#f4f7fb; --card:#fff; --ink:#152033; --muted:#667085;
+  --line:#dfe5ee; --accent:#1769aa; --accent2:#0f766e;
+  --shadow:0 12px 32px rgba(16,24,40,.08);
+}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:#0e2238;color:white;padding:20px 28px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+h1{font-size:22px;margin:0 0 4px}.subtitle{font-size:13px;color:#cbd8e7}
+.badge{background:#fff2cc;color:#694b00;border:1px solid #efd88b;padding:7px 11px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}
+.wrap{max-width:1400px;margin:22px auto;padding:0 20px}
+.method{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:14px;padding:14px 18px;margin-bottom:16px}
+.method strong{color:#0e4d7b}.method span{color:var(--muted);font-size:13px}
+.controls{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.toggle{display:flex;background:#e8edf4;padding:4px;border-radius:10px}
+.toggle button{border:0;background:transparent;padding:9px 16px;border-radius:7px;font-weight:700;color:#536174;cursor:pointer}
+.toggle button.active{background:white;color:#0e4d7b;box-shadow:0 2px 7px rgba(0,0,0,.08)}
+.legend{font-size:12px;color:var(--muted);display:flex;gap:14px;align-items:center}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:5px}
+.layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(340px,.85fr);gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.mapcard{padding:14px}.maptitle{display:flex;justify-content:space-between;align-items:center;margin:0 0 8px}
+.maptitle h2{font-size:16px;margin:0}.mapnote{font-size:12px;color:var(--muted)}
+svg{width:100%;height:auto;display:block;background:#edf4ea;border-radius:10px;border:1px solid #d8e3d5}
+.panch{stroke:#fff;stroke-width:2;cursor:pointer;transition:.15s;vector-effect:non-scaling-stroke}
+.panch:hover{stroke:#111827;stroke-width:3}.panch.selected{stroke:#111827;stroke-width:4}
+.pname{font-size:11px;font-weight:800;pointer-events:none;text-anchor:middle;fill:#243142}
+.coarse .panch{fill:#c7d0db!important}
+.coarse .pname{fill:#485568}
+.side{padding:18px}.side h2{font-size:18px;margin:0 0 4px}.side .small{font-size:12px;color:var(--muted);margin-bottom:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+.metric{border:1px solid var(--line);border-radius:10px;padding:11px}.metric label{font-size:11px;color:var(--muted);display:block;margin-bottom:4px}.metric b{font-size:19px}
+.band{background:#f4f8fc;border:1px solid #dce8f2;border-radius:10px;padding:12px;margin-bottom:12px}
+.bandtop{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}.bandval{font-size:16px;font-weight:800;margin-top:4px}
+.bar{height:9px;background:#dbe4ee;border-radius:99px;overflow:hidden;margin-top:9px}.bar>i{display:block;height:100%;border-radius:99px;background:#4b8cc8}
+.flag{display:inline-flex;align-items:center;gap:6px;background:#e8f5ee;color:#17603c;border:1px solid #bfe1cd;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:800;margin-bottom:13px}
+.advisory{border-left:4px solid #1769aa;background:#f3f7fb;padding:12px 13px;border-radius:8px;font-size:13px;line-height:1.45}
+.footer{font-size:11px;color:#7a8696;margin-top:14px;line-height:1.45}
+@media(max-width:900px){.layout{grid-template-columns:1fr}header{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>Panchayat-Level Weather Downscaling</h1><div class="subtitle">SIH 2026 • Coarse forecast → local weather information → agro-meteorological advisory</div></div>
+  <div class="badge">CONCEPT DEMO • SYNTHETIC DATA</div>
+</header>
+
+<div class="wrap">
+  <div class="method">
+    <strong>Method:</strong>
+    <span>Coarse district forecast + local elevation/slope → terrain-aware adjustment → Panchayat-level estimate. Temperature uses an elevation lapse-rate concept; rainfall uses a terrain/slope-driven adjustment. No real ML validation is claimed.</span>
+  </div>
+
+  <div class="controls">
+    <div class="toggle">
+      <button id="coarseBtn">Coarse Forecast</button>
+      <button id="downBtn" class="active">Downscaled View</button>
+    </div>
+    <div class="legend">
+      <span><i class="dot" style="background:#b8d9ef"></i>lower rainfall</span>
+      <span><i class="dot" style="background:#4c8cc5"></i>higher rainfall</span>
+      <span>Click any Panchayat</span>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="card mapcard">
+      <div class="maptitle">
+        <h2 id="mapTitle">Downscaled Panchayat rainfall probability</h2>
+        <div class="mapnote">Illustrative district • 12 Panchayats</div>
+      </div>
+      <svg id="map" viewBox="0 0 900 610" aria-label="Interactive Panchayat map"></svg>
+    </div>
+
+    <div class="card side">
+      <h2 id="selectedName">Panchayat 01</h2>
+      <div class="small">Click a polygon to inspect the local forecast.</div>
+      <div class="flag">● Moderate observational support — concept only</div>
+
+      <div class="grid">
+        <div class="metric"><label>Maximum temperature</label><b id="tmax">31.8 °C</b></div>
+        <div class="metric"><label>Minimum temperature</label><b id="tmin">23.4 °C</b></div>
+        <div class="metric"><label>Rain probability</label><b id="prob">68%</b></div>
+        <div class="metric"><label>Rainfall P50</label><b id="p50">24 mm</b></div>
+      </div>
+
+      <div class="band">
+        <div class="bandtop"><span>Rainfall uncertainty band</span><span>P10–P90</span></div>
+        <div class="bandval" id="band">7–52 mm/day</div>
+        <div class="bar"><i id="bar" style="width:68%"></i></div>
+      </div>
+
+      <div class="advisory" id="advisory">
+        Rain likely. Where feasible, plan field operations with a rain buffer and monitor drainage in low-lying plots.
+      </div>
+
+      <div class="footer">
+        <b>Prototype honesty note:</b> Values are generated for demonstration. Production version will replace them with verified GFS forecasts, AWS/rain-gauge observations, actual Panchayat GIS boundaries and DEM/land-cover data.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const data = [
+ {id:1,rain:18,prob:54,tmax:32.6,tmin:24.0,p10:4,p90:38,ad:"Rain possible. Keep a small weather buffer for field operations."},
+ {id:2,rain:27,prob:67,tmax:31.9,tmin:23.6,p10:7,p90:51,ad:"Rain likely. Plan field operations with a rain buffer and monitor drainage."},
+ {id:3,rain:34,prob:76,tmax:31.2,tmin:23.1,p10:9,p90:62,ad:"Higher rain risk. Review drainage and avoid time-sensitive field operations where feasible."},
+ {id:4,rain:22,prob:61,tmax:32.1,tmin:23.8,p10:6,p90:44,ad:"Rain possible. Maintain a rain buffer around spraying or harvesting activities."},
+ {id:5,rain:41,prob:82,tmax:30.7,tmin:22.8,p10:12,p90:70,ad:"High rain signal. Check drainage and postpone weather-sensitive operations where feasible."},
+ {id:6,rain:29,prob:71,tmax:31.5,tmin:23.0,p10:8,p90:56,ad:"Rain likely. Monitor field access and drainage before planned operations."},
+ {id:7,rain:16,prob:48,tmax:33.1,tmin:24.4,p10:3,p90:34,ad:"Lower rain signal. Continue routine monitoring and retain normal field plans."},
+ {id:8,rain:25,prob:64,tmax:32.0,tmin:23.7,p10:6,p90:48,ad:"Rain possible. Keep a small operational buffer and monitor local conditions."},
+ {id:9,rain:38,prob:79,tmax:31.0,tmin:22.9,p10:10,p90:66,ad:"Higher rain risk. Review drainage and protect recently applied inputs where feasible."},
+ {id:10,rain:20,prob:57,tmax:32.4,tmin:24.1,p10:4,p90:41,ad:"Rain possible. Consider timing weather-sensitive field activities carefully."},
+ {id:11,rain:31,prob:73,tmax:31.4,tmin:23.3,p10:8,p90:58,ad:"Rain likely. Monitor drainage and provide a rain buffer for field operations."},
+ {id:12,rain:14,prob:43,tmax:33.4,tmin:24.7,p10:2,p90:31,ad:"Lower rain signal. Routine monitoring is appropriate in this concept scenario."}
+];
+
+const colors = ["#cfe7f5","#bddcef","#a9d1ea","#94c5e4","#7fb8de","#69a9d5","#d8e9f3","#a6cee3","#75b4db","#c0deed","#8bbede","#d1e5f0"];
+const svg = document.getElementById("map");
+let mode="down", selected=1;
+
+function polygonPoints(cx,cy,w,h,skew=0){
+  return `${cx-w/2},${cy-h/2} ${cx+w/2},${cy-h/2+skew} ${cx+w/2-8},${cy+h/2} ${cx-w/2+8},${cy+h/2-skew}`;
+}
+function draw(){
+  svg.innerHTML="";
+  // Background terrain hints
+  const bg=document.createElementNS("http://www.w3.org/2000/svg","path");
+  bg.setAttribute("d","M0 110 C160 40 280 170 430 85 S720 60 900 130 L900 0 L0 0Z");
+  bg.setAttribute("fill","#dfead9"); svg.appendChild(bg);
+
+  const title=document.createElementNS("http://www.w3.org/2000/svg","text");
+  title.setAttribute("x",450); title.setAttribute("y",45); title.setAttribute("text-anchor","middle");
+  title.setAttribute("font-size","18"); title.setAttribute("font-weight","800"); title.setAttribute("fill","#344054");
+  title.textContent="Illustrative Pilot District"; svg.appendChild(title);
+
+  const startX=185,startY=135,w=175,h=120,gx=185,gy=125;
+  data.forEach((d,i)=>{
+    const col=i%4,row=Math.floor(i/4),cx=startX+col*gx,cy=startY+row*gy;
+    const p=document.createElementNS("http://www.w3.org/2000/svg","polygon");
+    p.classList.add("panch"); if(d.id===selected)p.classList.add("selected");
+    p.dataset.id=d.id;
+    p.setAttribute("points",polygonPoints(cx,cy,w,h,(col%2?5:-4)));
+    p.setAttribute("fill", mode==="coarse" ? "#c7d0db" : colors[i]);
+    p.addEventListener("click",()=>select(d.id));
+    svg.appendChild(p);
+
+    const tx=document.createElementNS("http://www.w3.org/2000/svg","text");
+    tx.classList.add("pname"); tx.setAttribute("x",cx); tx.setAttribute("y",cy+4);
+    tx.textContent=`Panchayat ${String(d.id).padStart(2,"0")}`; svg.appendChild(tx);
+  });
+
+  const note=document.createElementNS("http://www.w3.org/2000/svg","text");
+  note.setAttribute("x",450);note.setAttribute("y",555);note.setAttribute("text-anchor","middle");
+  note.setAttribute("font-size","12");note.setAttribute("fill","#667085");
+  note.textContent=mode==="coarse" ? "Coarse mode: one district-wide forecast value is shown everywhere." : "Downscaled mode: local variation is introduced using terrain/context.";
+  svg.appendChild(note);
+}
+function select(id){
+  selected=id; const d=data[id-1];
+  document.getElementById("selectedName").textContent=`Panchayat ${String(id).padStart(2,"0")}`;
+  document.getElementById("tmax").textContent=`${d.tmax.toFixed(1)} °C`;
+  document.getElementById("tmin").textContent=`${d.tmin.toFixed(1)} °C`;
+  document.getElementById("prob").textContent=`${d.prob}%`;
+  document.getElementById("p50").textContent=`${d.rain} mm`;
+  document.getElementById("band").textContent=`${d.p10}–${d.p90} mm/day`;
+  document.getElementById("bar").style.width=`${d.prob}%`;
+  document.getElementById("advisory").textContent=d.ad;
+  draw();
+}
+function setMode(m){
+  mode=m;
+  document.getElementById("coarseBtn").classList.toggle("active",m==="coarse");
+  document.getElementById("downBtn").classList.toggle("active",m==="down");
+  document.getElementById("mapTitle").textContent=m==="coarse" ? "Coarse district forecast" : "Downscaled Panchayat rainfall probability";
+  if(m==="coarse"){
+    // Coarse forecast: deliberately identical values across the district.
+    document.getElementById("tmax").textContent="32.0 °C";
+    document.getElementById("tmin").textContent="23.8 °C";
+    document.getElementById("prob").textContent="65%";
+    document.getElementById("p50").textContent="25 mm";
+    document.getElementById("band").textContent="8–50 mm/day";
+    document.getElementById("bar").style.width="65%";
+    document.getElementById("advisory").textContent="District-wide coarse forecast: the same weather signal is presented across all Panchayats.";
+  } else select(selected);
+  draw();
+}
+document.getElementById("coarseBtn").onclick=()=>setMode("coarse");
+document.getElementById("downBtn").onclick=()=>setMode("down");
+select(1);
+</script>
+</body>
+</html>
