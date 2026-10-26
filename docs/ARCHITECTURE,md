@@ -1,0 +1,28 @@
+WeatherTech — System Architecture
+
+Overview
+
+WeatherTech is a concept prototype demonstrating Panchayat-level weather downscaling through an interactive web interface.
+
+Current Architecture
+
+- Frontend: HTML, CSS, and JavaScript.
+- Visualization: SVG-based interactive map with 12 illustrative Panchayat polygons.
+- Data:  rainfall, temperature, and advisory values.
+- Interaction: Users can switch forecast views and select Panchayats to view weather indicators.
+
+Workflow
+
+1. Load the prototype in a web browser.
+2. Display the illustrative Panchayat map.
+3. Select Coarse Forecast or Downscaled View.
+4. Select a Panchayat to view its displayed weather values and advisory.
+
+Proposed Future Architecture
+
+1. Obtain verified weather forecast data.
+2. Integrate authentic Panchayat boundaries and elevation/slope data.
+3. Develop and validate an AI/ML downscaling model.
+4. Generate Panchayat-level rainfall and temperature estimates.
+5. Display predictions, uncertainty ranges, and agricultural advisories.
+
