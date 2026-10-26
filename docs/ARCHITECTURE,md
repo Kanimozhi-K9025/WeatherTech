@@ -5,11 +5,10 @@ Overview
 WeatherTech is a concept prototype demonstrating Panchayat-level weather downscaling through an interactive web interface.
 
 Current Architecture
-
-- Frontend: HTML, CSS, and JavaScript.
-- Visualization: SVG-based interactive map with 12 illustrative Panchayat polygons.
-- Data:  rainfall, temperature, and advisory values.
-- Interaction: Users can switch forecast views and select Panchayats to view weather indicators.
+User Interface: HTML, CSS, and JavaScript.
+Map Visualization: SVG-based interactive district, block, and panchayat views.
+Data Processing: JavaScript generates illustrative subdivisions and synthetic weather values.
+Weather Display: Temperature, rainfall probability, uncertainty range, terrain information, confidence, and agricultural advisories.
 
 Workflow
 
